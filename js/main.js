@@ -48,7 +48,7 @@ function createSequentialNumber(limitNumber) {
     for (let i = 0; i <= limitNumber; i++) {
         arraySequentialNumber[i] = i;
     }
-    
+
     return arraySequentialNumber;
 }
 
@@ -64,9 +64,11 @@ function createSingleCell(arraySequentialNumber, indexNumberInsert, numberOfCell
 
     const singleCellAddDifficulty = selectDifficulty(singleCell, numberOfCell); // Richiamo la funzione che in base alla difficoltà selezionata aggiunge alla cella una classe diversa
 
+    // Richiamo la funzione del click della cella
+    singleCellAddDifficulty.addEventListener("click", cellClik);
+
     return singleCellAddDifficulty;
 }
-
 
 // Funzione che in base alla difficoltà selezionata aggiunge ad una singola cella una classe diversa
 function selectDifficulty(singleCell, numberOfCell) {
@@ -115,10 +117,9 @@ function printGridCreate(gridCreate, grid) {
 }
 
 // Funzione che viene attivata ogni volta che l'utente clicca su una cella
-// function cellClik(cell) {
-//     console.log(cell);
-//     document.getElementById(cell).classList.add("my-bg-blue");
-// }
+function cellClik() {
+    this.classList.add("my-bg-blue");
+}
 
 // Pulsante retry
 btnRetry.addEventListener("click", function () {
