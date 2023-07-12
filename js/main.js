@@ -25,6 +25,7 @@ const btnCreate = document.querySelector(".btn-create");
 const gridCreate = document.getElementById("grid-create");
 const selectDifficultyElement = document.getElementById("select-difficulty");
 const btnRetry = document.querySelector(".btn-retry");
+let counter = 0;
 
 btnCreate.addEventListener("click", onBtnCreate); // Richiamo la funzione click sul pulsante
 
@@ -151,8 +152,6 @@ function createRandomNumber(numberOfCell) {
         }
     }
 
-    console.log(randomNumbers);
-
     return randomNumbers;
 }
 
@@ -160,12 +159,9 @@ function createRandomNumber(numberOfCell) {
 function datasetExplodesCells(newSingleCell, i, randomNumbers) {
 
     // Aggiungo un dataset argument se l'elemento corrisponde
-    for (let z = 0; z <= randomNumbers.length; z++) {
+    for (let z = 0; z <= 16; z++) {
         if (randomNumbers[z] === i) {
             newSingleCell.dataset.nomeArg = "explode";
-            console.log(newSingleCell.dataset.nomeArg);
-            console.log(newSingleCell);
-            console.log(i);
         }
     }
 }
@@ -173,46 +169,44 @@ function datasetExplodesCells(newSingleCell, i, randomNumbers) {
 // Funzione che aggiunge tramite il dataset la difficoltà selezionata dall'utente all'id "grid-create"
 function datasetDifficultySelected(gridCreate, numberOfCell) {
     gridCreate.dataset.nomeArg = `_${numberOfCell}`;
-    console.log(gridCreate.dataset.nomeArg);
-    console.log(gridCreate);
 }
 
 // Funzione che viene attivata ogni volta che l'utente clicca su una cella
 function cellClik() {
-    this.classList.add("my-bg-blue");
-
     //Controllo se la casella cliccata dall'utente da parte dell'array di 16 numeri
     if (this.dataset.nomeArg === "explode") {
         this.classList.add("my-bg-red");
 
         // Richiamo la funzione che fa terminare la partita
-        endGame();
+        endGame(counter);
 
     } else {
-        this.classList.add("my-bg-blue");
+        this.classList.add("my-bg-blue", "already-clicked-cell");
+        counter++; // Aggiorno il contatore
 
-        // Richiamo la funzione che aggiorna il contatore delle celle selezionate
-        datasetAlredySelected();
+        // Richiamo la funzione che verifica se il contatore delle celle selezionate ha raggiunto il numero masimo
+        maxCellSelected(counter);
     }
 }
 
-// Richiamo la funzione che aggiorna il contatore delle celle selezionate
-function datasetAlredySelected() {
-    let counter;
-    counter++;
+// Funzione che verifica se il contatore delle celle selezionate ha raggiunto il numero masimo
+function maxCellSelected(counter) {
 
-    // Se il contatore raggiunge il numero selezionato dall'utente (difficoltà) - 16 allora richiamo la funzione che fa terminare la partita
+    const maxCell = parseInt(selectDifficultyElement.value) - 16;
 
+    // Se il contatore raggiunge il numero selezionato dall'utente (difficoltà) - 16 allora richiamo la funzione che fa terminare la partita    
+    if (counter === maxCell) {
+        // Richiamo la funzione che fa terminare la partita
+        endGame(counter);
+    } 
 }
 
-
-
 // Funzione che viene attivata quando il gioco termina
-function endGame() {
+function endGame(counter) {
 
     const endGame = document.getElementById("end-game");
 
-    endGame.textContent = "End Game";
+    endGame.textContent = "End Game - Il tuo punteggio è di " + counter;
     endGame.classList.add("end-game-click");
 }
 

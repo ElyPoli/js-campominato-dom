@@ -73,3 +73,7 @@ main > div {
     height: 100%;
     width: 100%;
 }
+
+.already-clicked-cell {
+    pointer-events: none;
+}
