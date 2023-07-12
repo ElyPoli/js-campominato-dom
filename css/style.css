@@ -1,0 +1,60 @@
+:root {
+    --bs-primary: #243d40;
+    --bs-primary-rgb: 36, 61, 64;
+}
+
+main {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    min-height: 100vh;
+}
+
+main > div {
+    height: fit-content;
+}
+
+.btn-primary {
+    --bs-btn-bg: #3a846d;
+    --bs-btn-border-color: #3a846d;
+    --bs-btn-hover-bg: #49a588;
+    --bs-btn-hover-border-color: #49a588;
+    --bs-btn-active-bg: #49a588;
+    --bs-btn-active-border-color: #49a588;
+    --bs-btn-disabled-bg: #49a588;
+    --bs-btn-disabled-border-color: #49a588;
+}
+
+.img-logo {
+    width: 50px;
+}
+
+.my-cel-width-easy {
+    width: calc(100% / 10);
+    aspect-ratio: 4/3;
+}
+
+.my-cel-width-medium {
+    width: calc(100% / 9);
+    aspect-ratio: 4/3;
+}
+
+.my-cel-width-hard {
+    width: calc(100% / 7);
+    aspect-ratio: 4/3;
+}
+
+.my-bg-blue {
+    background-color: #3a9a7f;
+}
+
+#grid-create {
+    background-image: url("../img/img-grass.png");
+    background-size: contain;
+}
+
+.form-select {
+    color: white;
+    background-color: #3a846d;
+    font-weight: bold;
+    text-transform: uppercase;
+}
