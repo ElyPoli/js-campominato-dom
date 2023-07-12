@@ -47,9 +47,14 @@ main > div {
     background-color: #3a9a7f;
 }
 
+.my-bg-red {
+    background-color: #bc4749;
+}
+
 #grid-create {
     background-image: url("../img/img-grass.png");
     background-size: contain;
+    position: relative;
 }
 
 .form-select {
@@ -57,4 +62,14 @@ main > div {
     background-color: #3a846d;
     font-weight: bold;
     text-transform: uppercase;
+}
+
+#end-game {
+    position: absolute;
+}
+
+.end-game-click {
+    background-color: rgb(0, 0, 0, .5);
+    height: 100%;
+    width: 100%;
 }
