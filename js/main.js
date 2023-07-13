@@ -64,7 +64,7 @@ function createSingleCell(arraySequentialNumber, indexNumberInsert, numberOfCell
 
     // Aggiungo le classi ad una singola cella
     singleCell.classList.add("text-center", "fs-3", "fw-bold", "border", "my-single-cell");
-    singleCell.textContent = arraySequentialNumber[indexNumberInsert];
+    //singleCell.textContent = arraySequentialNumber[indexNumberInsert];
 
     // Richiamo la funzione che in base alla difficoltà selezionata aggiunge alla cella una classe diversa
     const singleCellAddDifficulty = selectDifficulty(singleCell, numberOfCell);
@@ -209,7 +209,6 @@ function allExplodes() {
 
     // Scorro su tutte le celle e leggendo il dataset individuo le bombe
     for (let i = 0; i < allCells.length; i++) {
-        console.log(this);
         if (allCells[i].dataset.nomeArg === "explode") {
             // Aggiungo alla casella la classe con sfondo rosso
             allCells[i].classList.add("my-bg-red");
