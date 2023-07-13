@@ -177,9 +177,11 @@ function cellClik() {
     if (this.dataset.nomeArg === "explode") {
         this.classList.add("my-bg-red");
 
+        // Richiamo la funzione che rivela tutte le caselle bombe
+        allExplodes();
+
         // Richiamo la funzione che fa terminare la partita
         endGame(counter);
-
     } else {
         this.classList.add("my-bg-blue", "already-clicked-cell");
         counter++; // Aggiorno il contatore
@@ -198,7 +200,21 @@ function maxCellSelected(counter) {
     if (counter === maxCell) {
         // Richiamo la funzione che fa terminare la partita
         endGame(counter);
-    } 
+    }
+}
+
+// Funzione che rivela tutte le caselle bombe
+function allExplodes() {
+    const allCells = document.querySelectorAll("#grid-create > div");
+
+    // Scorro su tutte le celle e leggendo il dataset individuo le bombe
+    for (let i = 0; i < allCells.length; i++) {
+        console.log(this);
+        if (allCells[i].dataset.nomeArg === "explode") {
+            // Aggiungo alla casella la classe con sfondo rosso
+            allCells[i].classList.add("my-bg-red");
+        }
+    }
 }
 
 // Funzione che viene attivata quando il gioco termina
