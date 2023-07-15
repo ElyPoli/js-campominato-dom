@@ -1,6 +1,10 @@
 :root {
     --bs-primary: #243d40;
     --bs-primary-rgb: 36, 61, 64;
+    --bs-warning: #bc4749;
+    --bs-warning-rgb: 188, 71, 73;
+    --bs-success: #3a846d;
+    --bs-success-rgb: 58, 132, 109;
 }
 
 main {
@@ -28,30 +32,31 @@ main > div {
     width: 50px;
 }
 
-.my-cel-width-easy {
+.my-cel-width-easy > div {
     width: calc(100% / 10);
     aspect-ratio: 4/3;
 }
 
-.my-cel-width-medium {
+.my-cel-width-medium > div {
     width: calc(100% / 9);
     aspect-ratio: 4/3;
 }
 
-.my-cel-width-hard {
+.my-cel-width-hard > div {
     width: calc(100% / 7);
     aspect-ratio: 4/3;
 }
 
-.my-bg-blue {
+.cell-empty {
     background-color: #3a9a7f;
+    pointer-events: none;
 }
 
-.my-bg-red {
+.cell-exploded {
     background-color: #bc4749;
 }
 
-#grid-create {
+#grid-container {
     background-image: url("../img/img-grass.png");
     background-size: contain;
     position: relative;
@@ -64,20 +69,10 @@ main > div {
     text-transform: uppercase;
 }
 
-#end-game {
-    position: absolute;
-}
-
 .end-game-click {
+    position: absolute;
     background-color: rgb(0, 0, 0, .7);
     height: 100%;
     width: 100%;
-}
-
-.already-clicked-cell {
-    pointer-events: none;
-}
-
-.end-game-click ~ div {
-    pointer-events: none;
+    margin: 0;
 }

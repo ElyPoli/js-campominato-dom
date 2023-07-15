@@ -21,208 +21,164 @@ Quando si clicca su una bomba e finisce la partita, il software scopre tutte le 
 "use strict";
 
 // Dichiaro variabili
-const btnCreate = document.querySelector(".btn-create");
-const gridCreate = document.getElementById("grid-create");
-const selectDifficultyElement = document.getElementById("select-difficulty");
+const gridContainer = document.querySelector("#grid-container");
+const selectDifficulty = document.getElementById("select-difficulty");
+const btnNewGame = document.querySelector(".btn-new-game");
 const btnRetry = document.querySelector(".btn-retry");
 let counter = 0;
 
-btnCreate.addEventListener("click", onBtnCreate); // Richiamo la funzione click sul pulsante
+btnNewGame.addEventListener("click", onBtnNewGame);
 
-// Funzione click sul pulsante
-function onBtnCreate() {
-    const numberOfCell = parseInt(selectDifficultyElement.value);
+// Click su "New Game"
+function onBtnNewGame() {
+    const numberOfCell = parseInt(selectDifficulty.value);
 
-    // Richiamo la funzione che aggiunge tramite il dataset la difficoltà selezionata dall'utente all'id "grid-create"
-    datasetDifficultySelected(gridCreate, numberOfCell);
+    btnNewGame.classList.add("disabled");
 
-    const arrayCellNumber = createSequentialNumber(numberOfCell); // Richiamo la funzione che crea i numeri da inserire nelle celle
+    const bombs = bombsCreate(numberOfCell);
 
-    const gridOfCells = gridOfCellsCreate(arrayCellNumber, numberOfCell, numberOfCell); // Richiamo la funzione che crea la griglia di celle con il numero di celle richieste dall'utente
-
-    printGridCreate(gridCreate, gridOfCells); // Richiamo la funzione che stampa il numero di celle richieste dall'utente
-
-    btnCreate.classList.add("disabled"); // Una volta cliccato il pulsante che crea la griglia lo disabilito
+    gridPrint(numberOfCell, bombs);
 }
 
-// Funzione che crea un numero progressivo da 0 a quello che seleziona l'utente
-function createSequentialNumber(limitNumber) {
-    const arraySequentialNumber = [];
-
-    for (let i = 0; i <= limitNumber; i++) {
-        arraySequentialNumber[i] = i;
-    }
-
-    return arraySequentialNumber;
-}
-
-// Funzione che crea una singola cella inserendo un numero all'interno
-function createSingleCell(arraySequentialNumber, indexNumberInsert, numberOfCell) {
-
-    // Creo una singola cella
-    const singleCell = document.createElement("div");
-
-    // Aggiungo le classi ad una singola cella
-    singleCell.classList.add("text-center", "fs-3", "fw-bold", "border", "my-single-cell");
-    //singleCell.textContent = arraySequentialNumber[indexNumberInsert];
-
-    // Richiamo la funzione che in base alla difficoltà selezionata aggiunge alla cella una classe diversa
-    const singleCellAddDifficulty = selectDifficulty(singleCell, numberOfCell);
+// Crea singola cella
+function cellCreate(bombs, cellIdArray) {
+    const cell = document.createElement("div");
+    cell.classList.add("border");
 
     // Richiamo la funzione del click della cella
-    singleCellAddDifficulty.addEventListener("click", cellClik);
-
-    return singleCellAddDifficulty;
+    cell.addEventListener("click", (event) => {
+        cellClicked(event, bombs, cell, cellIdArray);
+    });
+    return cell;
 }
 
-// Funzione che in base alla difficoltà selezionata aggiunge ad una singola cella una classe diversa
-function selectDifficulty(singleCell, numberOfCell) {
-
-    const singleCellAddedClass = singleCell;
-
-    let easy = 100;
-    let medium = 81;
-
-    // In base alla difficoltà selezionata aggiungo alla cella una classe differente
-    if (numberOfCell === easy) {
-        singleCellAddedClass.classList.add("my-cel-width-easy");
-    } else if (numberOfCell === medium) {
-        singleCellAddedClass.classList.add("my-cel-width-medium");
-    } else {
-        singleCellAddedClass.classList.add("my-cel-width-hard");
-    }
-
-    return singleCellAddedClass;
-}
-
-// Funzione che crea la griglia di celle con il numero di celle richieste dall'utente
-function gridOfCellsCreate(arraySequentialNumber, numberOfCellPrint, numberOfCell) {
-
+// Crea la griglia
+function gridCreate(numberOfCell, bombs) {
     const grid = [];
-    let i = 0;
-    let newSingleCell = createSingleCell(arraySequentialNumber, i, numberOfCell); // Richiamo la funzione che crea una singola cella per poter passare la singola cella alla funzione "createRandomNumber"
+    const cellIdArray = cellIdNumber(numberOfCell);
 
-    // Richiamo la funzione che sorteggia 16 numeri casuali tra 0 e la difficoltà scelta dall'utente
-    const randomNumbers = createRandomNumber(numberOfCell, newSingleCell);
+    gameDifficulty(numberOfCell); // modifico la grandezza della griglia in base alla difficoltà selezionata
 
-    // Creo la griglia di celle con il numero di celle richieste dall'utenteù
-    do {
-        // Richiamo la funzione che crea una singola cella
-        newSingleCell = createSingleCell(arraySequentialNumber, i, numberOfCell);
+    for (let i = 0; i < numberOfCell; i++) {
+        let cell = cellCreate(bombs, numberOfCell);
 
-        // Richiamo la funzione che aggiunge un dataset argument agli elementi che corrispondono ai 16 numeri selezionati
-        datasetExplodesCells(newSingleCell, i, randomNumbers);
-
-        grid.push(newSingleCell);
-
-        i++;
-    } while (i < numberOfCellPrint);
-
+        cell.setAttribute("id", cellIdArray[i]);
+        grid.push(cell);
+    }
     return grid;
 }
 
-// Funzione che stampa nel div "#grid-create" la griglia creata
-function printGridCreate(gridCreate, grid) {
+// Crea un array di numeri
+function cellIdNumber(numberOfCell) {
+    let cellIdArray = [];
+    for (let i = 0; i < numberOfCell; i++) {
+        cellIdArray.push(`_${i}`);
+    }
+    return cellIdArray;
+}
 
-    for (let i = 0; i < grid.length; i++) {
-        gridCreate.append(grid[i]);
+// Aggiunge una classe in base al numero di celle da creare
+function gameDifficulty(numberOfCell) {
+    if (numberOfCell === 100) {
+        gridContainer.classList.add("my-cel-width-easy");
+    } else if (numberOfCell === 81) {
+        gridContainer.classList.add("my-cel-width-medium");
+    } else {
+        gridContainer.classList.add("my-cel-width-hard");
     }
 }
 
-// Funzione che sorteggia 16 numeri casuali tra 0 e la difficoltà scelta dall'utente (creo le 16 bombe)
-function createRandomNumber(numberOfCell) {
-    const randomNumbers = [];
-    let singleRandomNumber, newRandomNumber;
+// Stampa la griglia
+function gridPrint(numberOfCell, bombs) {
+    const grid = gridCreate(numberOfCell, bombs);
 
-    // Per far sì che ciascun numero possa essere estratto una sola volta
+    for (let i = 0; i < grid.length; i++) {
+        gridContainer.append(grid[i]);
+    }
+}
+
+// Crea le 16 bombe
+function bombsCreate(numberOfCell) {
+    const bombs = [];
+    let singleBomb, newNumber;
+
     for (let i = 0; i <= 15; i++) {
-        singleRandomNumber = Math.floor(Math.random() * (numberOfCell - 0 + 1)) + 0;
-        newRandomNumber = true;
+        singleBomb = Math.floor(Math.random() * (numberOfCell + 1));
+        newNumber = true;
 
         for (let z = 0; z < i; z++) {
-            if (randomNumbers[z] === singleRandomNumber) {
-                newRandomNumber = false;
+            if (bombs[z] === `_${singleBomb}`) {
+                newNumber = false;
             }
         }
 
-        if (newRandomNumber === true) {
-            randomNumbers[i] = singleRandomNumber;
+        if (newNumber === true) {
+            bombs[i] = `_${singleBomb}`;
         } else {
             i--;
         }
     }
-
-    return randomNumbers;
+    return bombs;
 }
 
-// Funzione che aggiunge un dataset argument agli elementi che corrispondono ai 16 numeri selezionati
-function datasetExplodesCells(newSingleCell, i, randomNumbers) {
+// Click della cella
+function cellClicked(event, bombs, cell, numberOfCell) {
+    let boolean = false;
 
-    // Aggiungo un dataset argument se l'elemento corrisponde
-    for (let z = 0; z <= 16; z++) {
-        if (randomNumbers[z] === i) {
-            newSingleCell.dataset.nomeArg = "explode";
+    for (let i = 0; i < bombs.length; i++) {
+        if (cell.id === bombs[i]) {
+            boolean = true;
         }
     }
-}
 
-// Funzione che aggiunge tramite il dataset la difficoltà selezionata dall'utente all'id "grid-create"
-function datasetDifficultySelected(gridCreate, numberOfCell) {
-    gridCreate.dataset.nomeArg = `_${numberOfCell}`;
-}
-
-// Funzione che viene attivata ogni volta che l'utente clicca su una cella
-function cellClik() {
-    //Controllo se la casella cliccata dall'utente da parte dell'array di 16 numeri
-    if (this.dataset.nomeArg === "explode") {
-        this.classList.add("my-bg-red");
-
-        // Richiamo la funzione che rivela tutte le caselle bombe
-        allExplodes();
-
-        // Richiamo la funzione che fa terminare la partita
-        endGame(counter);
+    if (boolean === true) {
+        cell.classList.add("cell-exploded");
+        allExplodes(bombs, numberOfCell); // rivelo le bombe
+        endGame(counter); // termino la partita
     } else {
-        this.classList.add("my-bg-blue", "already-clicked-cell");
-        counter++; // Aggiorno il contatore
-
-        // Richiamo la funzione che verifica se il contatore delle celle selezionate ha raggiunto il numero masimo
-        maxCellSelected(counter);
+        cell.classList.add("cell-empty");
+        counter++;
+        maxCellSelected(counter, numberOfCell); // verifico il contatore
     }
 }
 
-// Funzione che verifica se il contatore delle celle selezionate ha raggiunto il numero masimo
-function maxCellSelected(counter) {
+// Rivela tutte le caselle bombe
+function allExplodes(bombs, numberOfCell) {
+    const allCells = document.querySelectorAll("#grid-container > div");
+    const cellIdArray = cellIdNumber(numberOfCell);
 
-    const maxCell = parseInt(selectDifficultyElement.value) - 16;
-
-    // Se il contatore raggiunge il numero selezionato dall'utente (difficoltà) - 16 allora richiamo la funzione che fa terminare la partita    
-    if (counter === maxCell) {
-        // Richiamo la funzione che fa terminare la partita
-        endGame(counter);
-    }
-}
-
-// Funzione che rivela tutte le caselle bombe
-function allExplodes() {
-    const allCells = document.querySelectorAll("#grid-create > div");
-
-    // Scorro su tutte le celle e leggendo il dataset individuo le bombe
-    for (let i = 0; i < allCells.length; i++) {
-        if (allCells[i].dataset.nomeArg === "explode") {
-            // Aggiungo alla casella la classe con sfondo rosso
-            allCells[i].classList.add("my-bg-red");
+    // Scorro su entrambi gli array per trovare le corrispondenze
+    for (let i = 0; i < cellIdArray.length; i++) {
+        for (let z = 0; z < bombs.length; z++) {
+            if (cellIdArray[i] === bombs[z]) {
+                allCells[i].classList.add("cell-exploded");
+            }
         }
     }
 }
 
-// Funzione che viene attivata quando il gioco termina
-function endGame(counter) {
+// Verifica il contatore
+function maxCellSelected(counter, numberOfCell) {
+    const maxCell = numberOfCell - 16;
 
-    const endGame = document.getElementById("end-game");
+    if (counter === maxCell) {
+        endGame(counter, maxCell); // termino la partita
+    }
+}
 
-    endGame.textContent = "End Game - Il tuo punteggio è di " + counter;
-    endGame.classList.add("end-game-click");
+// Termina il gioco
+function endGame(counter, maxCell) {
+    const endGame = document.createElement("p");
+    endGame.classList.add("end-game-click", "fw-bold", "fs-3", "d-flex", "align-items-center", "justify-content-center");
+
+    if (counter === maxCell) {
+        endGame.textContent = "HAI VINTO - Il tuo punteggio è di " + counter;
+        endGame.classList.add("text-success");
+    } else {
+        endGame.textContent = "HAI PERSO - Il tuo punteggio è di " + counter;
+        endGame.classList.add("text-warning");
+    }
+    gridContainer.append(endGame);
 }
 
 // Pulsante retry
